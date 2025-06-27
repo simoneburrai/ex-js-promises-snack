@@ -8,14 +8,21 @@
 
 function lanciaDado(){
     const promise = new Promise((resolve, reject)=>{
+        let casualNumber = 0;
         setTimeout(()=>{
-            const casualNumber = Math.round((Math.random() * 5) + 1) ;
+            const newCasualNumber = Math.round((Math.random() * 5) + 1) ;
             const percentageNumber = Math.round((Math.random() * 4) + 1);
-            if(percentageNumber===1){
+            if(percentageNumber===1){ //20% possibilità dado incastrato!
                 reject("Errore, dado incastrato")
             }else{
-                resolve(`Il numero del dado è ${casualNumber}`);
+                if(casualNumber===newCasualNumber){
+                    resolve("Incredibile")
+                }else{
+                    resolve(`Il numero del dado è ${casualNumber}`);
+                }
+                
             }
+            casualNumber = newCasualNumber;
         }, 3000)
     })
     
