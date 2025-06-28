@@ -6,30 +6,38 @@
 // che memorizza l'ultimo risultato. Se il numero esce due volte di fila, 
 // stampa "Incredibile!"
 
-function lanciaDado(){
-    const promise = new Promise((resolve, reject)=>{
-        let casualNumber = 0;
-        setTimeout(()=>{
-            const newCasualNumber = Math.round((Math.random() * 5) + 1) ;
-            const percentageNumber = Math.round((Math.random() * 4) + 1);
-            if(percentageNumber===1){ //20% possibilità dado incastrato!
-                reject("Errore, dado incastrato")
+
+function createThrowDice(){
+
+    let lastDiceThrow = null;
+
+    return ()=>{
+        return new Promise((resolve, reject)=>{
+            console.log("Sto lanciando il dado...");
+            setTimeout(()=>{
+                const isDiceStuck = Math.random() < 0.2;
+            if(isDiceStuck){
+                lastDiceThrow = null;
+                reject("Il dado si è incastrato");
             }else{
-                if(casualNumber===newCasualNumber){
-                    resolve("Incredibile")
-                }else{
-                    resolve(`Il numero del dado è ${casualNumber}`);
+                const diceThrow = Math.floor(Math.random() * 6) + 1;
+                resolve(`Il risultato del dado è ${diceThrow}`);
+                if(lastDiceThrow === diceThrow){
+                    console.log("Incredibile!!")
                 }
-                
+                lastDiceThrow = diceThrow;
             }
-            casualNumber = newCasualNumber;
-        }, 3000)
-    })
-    
-    promise.then(res => console.log(res))
-    .catch(err=> console.log(err));
-    return promise;
+            }, 3000)
+        })
+    }
 }
 
-lanciaDado();
-setInterval(lanciaDado, 2000);
+const diceThrowing = createThrowDice();
+
+
+setInterval(()=>{
+    diceThrowing()
+    .then(res => console.log(res))
+    .catch(err => console.log(err));
+
+}, 3000)
