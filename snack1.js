@@ -1,19 +1,54 @@
 const apiUrlUser = "https://dummyjson.com/users/";
 const apiUrlPost = "https://dummyjson.com/posts/"
 
-function getPostTitle(id){
-    const promise =  new Promise((resolve, reject)=>{
+
+//ESERCIZIO BASE
+
+// function getPostTitle(id){
+//     return new Promise((resolve, reject)=>{
+//         fetch(`${apiUrlPost}${id}`)
+//         .then(data => data.json())
+//         .then(obj=> resolve(obj.title))
+//         .catch(err => reject(err))
+//     });
+// }
+
+// getPostTitle(4)
+// .then(title=> console.log(title))
+// .catch(err=> console.error(err));    
+// function getPostTitle(id){
+//     return new Promise((resolve, reject)=>{
+//         fetch(`${apiUrlPost}${id}`)
+//         .then(data => data.json())
+//         .then(obj=> resolve(obj.title))
+//         .catch(err => reject(err))
+//     });
+// }
+
+// getPostTitle(4)
+// .then(title=> console.log(title))
+// .catch(err=> console.error(err));    
+
+
+//ESERCIZIO BONUS
+
+function getPostWithUser(id){
+    return new Promise((resolve, reject)=>{
         fetch(`${apiUrlPost}${id}`)
         .then(data => data.json())
-        .then(obj=> resolve(obj))
+        .then(post=>{
+            fetch(`${apiUrlUser}${post.userId}`)
+            .then(res => res.json())
+            .then(user => resolve({...post, user}))
+            .catch(err=> reject(err));
+        })
         .catch(err => reject(err))
     });
-    
-    promise.then(res=> console.log("Titolo del post: ",res.title))
-    .catch(err=> console.error(err))
 }
 
-getPostTitle(4);
+getPostWithUser(4)
+.then(newPost=> console.log(newPost))
+.catch(err=> console.error(err));    
 
 
 
